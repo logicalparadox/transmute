@@ -5,14 +5,13 @@ describe('transmute', function() {
 
       var readable = chai.spy('readable', function() {
         var data = this.read();
-        if (!data) return;
         data.toString().should.equal('hello universe');
       });
 
       stream.on('readable', readable);
 
       stream.on('end', function() {
-        readable.should.have.been.called.above(0);
+        readable.should.have.been.called(1);
         done();
       });
 
@@ -31,15 +30,14 @@ describe('transmute', function() {
 
       var readable = chai.spy('readable', function() {
         var data = this.read();
-        if (!data) return;
         data.toString().should.equal('HELLO UNIVERSE');
       });
 
       stream.on('readable', readable);
 
       stream.on('end', function() {
-        uppercase.should.have.been.called.above(0);
-        readable.should.have.been.called.above(0);
+        uppercase.should.have.been.called(1);
+        readable.should.have.been.called(1);
         done();
       });
 
@@ -62,15 +60,14 @@ describe('transmute', function() {
 
       var readable = chai.spy('readable', function() {
         var data = this.read();
-        if (!data) return;
         data.toString().should.equal(JSON.stringify({ hello: 'universe' }));
       });
 
       stream.on('readable', readable);
 
       stream.on('end', function() {
-        tostring.should.have.been.called.above(0);
-        readable.should.have.been.called.above(0);
+        tostring.should.have.been.called(1);
+        readable.should.have.been.called(1);
         done();
       });
 
@@ -90,14 +87,13 @@ describe('transmute', function() {
 
       var readable = chai.spy('readable', function() {
         var data = this.read();
-        if (!data) return;
         data.should.deep.equal({ hello: 'universe' });
       });
 
       stream.on('readable', readable);
       stream.on('end', function() {
-        tojson.should.have.been.called.above(0);
-        readable.should.have.been.called.above(0);
+        tojson.should.have.been.called(1);
+        readable.should.have.been.called(1);
         done();
       });
 
@@ -119,14 +115,13 @@ describe('transmute', function() {
 
       var readable = chai.spy('readable', function() {
         var data = this.read();
-        if (!data) return;
         data.should.deep.equal({ hello: 'universe', universe: 'hello'  });
       });
 
       stream.on('readable', readable);
       stream.on('end', function() {
-        addprop.should.have.been.called.above(0);
-        readable.should.have.been.called.above(0);
+        addprop.should.have.been.called(1);
+        readable.should.have.been.called(1);
         done();
       });
 
@@ -147,14 +142,13 @@ describe('transmute', function() {
 
       var readable = chai.spy('readable', function() {
         var data = this.read();
-        if (!data) return;
         res += data.toString();
       });
 
       stream.on('readable', readable);
       stream.on('end', function() {
-        flush.should.have.been.called.above(0);
-        readable.should.have.been.called.above(1);
+        flush.should.have.been.called(1);
+        readable.should.have.been.called(2);
         res.should.equal('hello universe again');
         done();
       });
