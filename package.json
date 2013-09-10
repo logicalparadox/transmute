@@ -18,8 +18,7 @@
       "test": "make test"
     }
   , "dependencies": {
-        "readable-stream": "1.1.x"
-      , "tea-extend": "0.2.x"
+        "tea-extend": "0.2.x"
     }
   , "devDependencies": {
         "chai": "*"
