@@ -15,12 +15,15 @@
     }
   , "main": "./index"
   , "scripts": {
-      "test": "mocha"
+      "test": "make test"
     }
   , "dependencies": {
+        "readable-stream": "1.1.x"
+      , "tea-extend": "0.2.x"
     }
   , "devDependencies": {
         "chai": "*"
+      , "chai-spies": "*"
       , "mocha": "*"
     }
 }
