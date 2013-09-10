@@ -17,14 +17,14 @@ in simple scenarios where it is not needed.
 var fs = require('fs');
 var transmute = require('transmute');
 
-var in = fs.createReadStream('lowercase.txt');
-var out = fs.createWriteStream('uppercase.txt');
+var lower = fs.createReadStream('lowercase.txt');
+var upper = fs.createWriteStream('uppercase.txt');
 
 var uppercase = transmute(function(chunk, enc, cb) {
   cb(null, chunk.toString().toUpperCase());
 });
 
-in.pipe(uppercase).pipe(out);
+lower.pipe(uppercase).pipe(upper);
 ```
 
 If options need to be provided (such as `objectMode`), transmute makes
