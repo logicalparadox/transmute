@@ -32,12 +32,10 @@ it easy to customize the transform stream. The following example illustrates
 `objectMode` when writing to the stream but the same also applies for `readable`.
 
 ```js
-var fs = require('fs');
 var transmute = require('transmute');
+var log = transmute({ options: { objectMode: true, hightWaterMark: 1 }});
 
-var out = fs.createWriteStream('log.txt');
-
-var log = transmute({
+var stringify = transmute({
     writable: { objectMode: true, highWaterMark: 1 }
   , transform: function(obj, enc, cb) {
       // avoid circular references
@@ -47,17 +45,15 @@ var log = transmute({
     }
 });
 
-log.pipe(out);
+log.pipe(stringify).pipe(process.stdout);
 log.write({ type: 'debug', msg: 'debug the universe' });
 log.write({ type: 'info', msg: 'hello universe' });
-``
+```
 
 If the same options apply for both sides of the transform then don't repeat yourself.
 
 ```js
-var transmute = require('transmute');
-
-var filter = transmute({
+var nodebug = transmute({
     options: { objectMode: true, highWaterMark: 1 }
   , transform: function(obj, enc, cb) {
       if (obj.type === 'debug') return cb();
@@ -65,36 +61,53 @@ var filter = transmute({
     }
 });
 
-log.pipe(filter).pipe(out);
+log.pipe(nodebug).pipe(stringify).pipe(process.stdout);
 log.write({ type: 'debug', msg: 'debug the universe' });
 log.write({ type: 'info', msg: 'hello universe' });
 ```
 
 If you want to provide a `flush` function to be invoked when the stream
-ends, that is easy too.
+ends, that is easy too. Using everything we learned.
 
 ```js
-var fs = require('fs');
+// examples/simple-logger.js
 var transmute = require('transmute');
 
-var out = fs.createWriteStream('log.txt');
-
 var log = transmute({
-    writable: { objectMode: true, highWaterMark: 1 }
+    options: { objectMode: true, highWaterMark: 1 }
   , transform: function(obj, enc, cb) {
-      var type = obj.type;
-      var msg = obj.msg;
-      cb(null, '[' + type + '] ' + msg + '\n');
+      obj.timestamp = new Date();
+      cb(null, obj);
     }
   , flush: function(cb) {
-      var ended = new Date().toUTCString()
-      cb(null, '[info] Log ended at ' + ended + '.\n');
+      var ended = {};
+      ended.timestamp = new Date();
+      ended.type = 'info';
+      ended.msg = 'Log ended';
+      this.push(ended);
+      cb();
     }
 });
 
-log.pipe(out);
-log.write({ type: 'debug', msg: 'debug the universe' });
+var nodebug = transmute({
+    options: { objectMode: true, highWaterMark: 1 }
+  , transform: function(obj, enc, cb) {
+      if (obj.type === 'debug') return cb();
+      cb(null, obj);
+    }
+});
+
+var display = transmute({
+    writable: { objectMode: true, highWaterMark: 1 }
+  , transform: function(obj, enc, cb) {
+      cb(null, obj.timestamp.toUTCString() + ' [' + obj.type + '] ' + obj.msg + '\n');
+    }
+});
+
+log.pipe(nodebug).pipe(display).pipe(process.stdout);
 log.write({ type: 'info', msg: 'hello universe' });
+log.write({ type: 'debug', msg: 'debug the universe' });
+log.write({ type: 'info', msg: 'did you see the debug, thought not.' });
 log.end();
 ```
 #### License
