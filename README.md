@@ -110,6 +110,14 @@ log.write({ type: 'debug', msg: 'debug the universe' });
 log.write({ type: 'info', msg: 'did you see the debug, thought not.' });
 log.end();
 ```
+
+## Inspiration
+
+`transmute` is certainly not the first to implement this idea. Here are some alternatives if you like:
+
+- [dominictarr/through](https://github.com/dominictarr/through) - the original streams1 implementation
+- [rvagg/through2](https://github.com/rvagg/through2) - another streams2 implementation, but less granular control over readable/writable options
+
 #### License
 
 (The MIT License)
