@@ -157,4 +157,12 @@ describe('transmute', function() {
       stream.end();
     });
   });
+
+  describe('when initialize fn is provide', function() {
+    it('is invoked during construction', function() {
+      var init = chai.spy('init');
+      var stream = transmute({ initialize: init });
+      init.should.have.been.called(1);
+    });
+  });
 });
