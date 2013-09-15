@@ -1,4 +1,10 @@
 
+0.2.0 / 2013-09-14 
+==================
+
+ * feature: [initialize] options hook during construction
+ * readme: add inspiration. Closes #1
+
 0.1.0 / 2013-09-10 
 ==================
 

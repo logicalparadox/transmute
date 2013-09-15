@@ -28,8 +28,17 @@ lower.pipe(uppercase).pipe(upper);
 ```
 
 If options need to be provided (such as `objectMode`), transmute makes
-it easy to customize the transform stream. The following example illustrates
-`objectMode` when writing to the stream but the same also applies for `readable`.
+it easy to customize the transform stream. Here are all available options.
+
+- `tranform` _{Function}_ transform function
+- `flush` _{Function}_ flush function
+- `initialize` _{Function}_ construction hook function
+- `options` _{Object}_ options for `Tranform` construction
+- `readable` _{Object}_ options to merge with `.readableState`
+- `writable` _{Object}_ options to merge with `.writableState`
+
+The following example illustrates `objectMode` when writing to the stream 
+but the same also applies for `readable`.
 
 ```js
 var transmute = require('transmute');
