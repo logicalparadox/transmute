@@ -1,14 +1,20 @@
+function read(fn) {
+  return function() {
+    var data = this.read();
+    if (data) fn(data);
+  }
+}
+
 describe('transmute', function() {
   describe('when invoked without options', function() {
     it('behaves like a through stream', function(done) {
       var stream = transmute();
 
-      var readable = chai.spy('readable', function() {
-        var data = this.read();
+      var readable = chai.spy('readable', function(data) {
         data.toString().should.equal('hello universe');
       });
 
-      stream.on('readable', readable);
+      stream.on('readable', read(readable));
 
       stream.on('end', function() {
         readable.should.have.been.called(1);
@@ -28,12 +34,11 @@ describe('transmute', function() {
 
       var stream = transmute(uppercase);
 
-      var readable = chai.spy('readable', function() {
-        var data = this.read();
+      var readable = chai.spy('readable', function(data) {
         data.toString().should.equal('HELLO UNIVERSE');
       });
 
-      stream.on('readable', readable);
+      stream.on('readable', read(readable));
 
       stream.on('end', function() {
         uppercase.should.have.been.called(1);
@@ -51,19 +56,18 @@ describe('transmute', function() {
       });
 
       var stream = transmute({
-          transform: tostring
-        , writable: { objectMode: true, highWaterMark: 1 }
+        writable: { objectMode: true, highWaterMark: 1 },
+        transform: tostring
       });
 
       stream._writableState.should.have.property('objectMode', true);
       stream._writableState.should.have.property('highWaterMark', 1);
 
-      var readable = chai.spy('readable', function() {
-        var data = this.read();
+      var readable = chai.spy('readable', function(data) {
         data.toString().should.equal(JSON.stringify({ hello: 'universe' }));
       });
 
-      stream.on('readable', readable);
+      stream.on('readable', read(readable));
 
       stream.on('end', function() {
         tostring.should.have.been.called(1);
@@ -81,16 +85,16 @@ describe('transmute', function() {
       });
 
       var stream = transmute({
-          transform: tojson
-        , readable: { objectMode: true, highWaterMark: 1 }
+        readable: { objectMode: true, highWaterMark: 1 },
+        transform: tojson
       });
 
-      var readable = chai.spy('readable', function() {
-        var data = this.read();
+      var readable = chai.spy('readable', function(data) {
         data.should.deep.equal({ hello: 'universe' });
       });
 
-      stream.on('readable', readable);
+      stream.on('readable', read(readable));
+
       stream.on('end', function() {
         tojson.should.have.been.called(1);
         readable.should.have.been.called(1);
@@ -99,7 +103,6 @@ describe('transmute', function() {
 
       stream.write(JSON.stringify({ hello: 'universe' }));
       stream.end();
-
     });
 
     it('transforms readable:object to writable:object', function(done) {
@@ -109,16 +112,15 @@ describe('transmute', function() {
       });
 
       var stream = transmute({
-          transform: addprop
-        , options: { objectMode: true, highWaterMark: 1 }
+        options: { objectMode: true, highWaterMark: 1 },
+        transform: addprop
       });
 
-      var readable = chai.spy('readable', function() {
-        var data = this.read();
+      var readable = chai.spy('readable', function(data) {
         data.should.deep.equal({ hello: 'universe', universe: 'hello'  });
       });
 
-      stream.on('readable', readable);
+      stream.on('readable', read(readable));
       stream.on('end', function() {
         addprop.should.have.been.called(1);
         readable.should.have.been.called(1);
@@ -140,12 +142,12 @@ describe('transmute', function() {
       var stream = transmute({ flush: flush });
       var res = '';
 
-      var readable = chai.spy('readable', function() {
-        var data = this.read();
+      var readable = chai.spy('readable', function(data) {
         res += data.toString();
       });
 
-      stream.on('readable', readable);
+      stream.on('readable', read(readable));
+
       stream.on('end', function() {
         flush.should.have.been.called(1);
         readable.should.have.been.called(2);

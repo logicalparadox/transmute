@@ -1,28 +1,27 @@
 {
-    "name": "transmute"
-  , "version": "0.2.0"
-  , "description": "No-inheritance transform streams."
-  , "author": "Jake Luer <jake@alogicalparadox.com> (http://alogicalparadox.com)"
-  , "license": "MIT"
-  , "keywords": [
-    ]
-  , "repository": {
-        "type": "git"
-      , "url": "git@github.com:logicalparadox/transmute.git"
-    }
-  , "engines": {
-      "node": ">=0.10.0"
-    }
-  , "main": "./index"
-  , "scripts": {
-      "test": "make test"
-    }
-  , "dependencies": {
-        "tea-extend": "0.2.x"
-    }
-  , "devDependencies": {
-        "chai": "*"
-      , "chai-spies": "*"
-      , "mocha": "*"
-    }
+  "name": "transmute",
+  "version": "0.2.0",
+  "description": "No-inheritance transform streams.",
+  "author": "Jake Luer <jake@alogicalparadox.com> (http://alogicalparadox.com)",
+  "license": "MIT",
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:logicalparadox/transmute.git"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "main": "./index",
+  "scripts": {
+    "test": "make test"
+  },
+  "dependencies": {
+    "params": "^0.1.0"
+  },
+  "devDependencies": {
+    "chai": "*",
+    "chai-spies": "*",
+    "mocha": "*"
+  }
 }
