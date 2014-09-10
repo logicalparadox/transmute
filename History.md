@@ -1,4 +1,10 @@
 
+0.3.0 / 2014-09-10 
+==================
+
+ * clean: no makefile, +mocha.opts, etc
+ * refactor: remove tea-extend, test stream consistency
+
 0.2.0 / 2013-09-14 
 ==================
 
